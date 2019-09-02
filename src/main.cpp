@@ -39,6 +39,8 @@ void setup() {
     Serial.begin(9600);
     pinMode(LED, OUTPUT);
     pinMode(PB, INPUT);
+    pinMode(10, OUTPUT);
+    digitalWrite(10, HIGH);
     serial_Cmd = SerialCommandsInit(LoRaCMD_TX, LoRaCMD_RX, LoRaBaudrate);
     Serial_Tpr = SerialTranspInit(LoRaTPR_TX, LoRaTPR_RX, LoRaBaudrate);
     if(LocalRead(&local_Id, &local_Net, &local_UniqueId) != MESH_OK){
@@ -63,14 +65,18 @@ void loop() {
                 Serial.println("Error building msg frame");
             }
             else {
+                Serial.print("Sending frame");
                 SendPacket();
             }
         }
     }
     else {
         if(ReceivePacketTransp(&remote_Id, buffer, &buffer_size, 5000) != MESH_OK){
+            Serial.println("Recived frame");
             if(buffer[0] == 1){
                 digitalWrite(LED, !digitalRead(LED));
+                Serial.print("LED: ");
+                Serial.println(digitalRead(LED));
             }
         }
     }
