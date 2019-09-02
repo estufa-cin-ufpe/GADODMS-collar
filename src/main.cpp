@@ -25,7 +25,7 @@ uint32_t local_UniqueId;
 
 // Remote LoRa INFO
 uint16_t remote_Id;
-uint8_t buffer[10];
+uint8_t buffer[10] = {0};
 uint8_t buffer_size;
 
 // payload
@@ -69,16 +69,21 @@ void loop() {
                 SendPacket();
             }
         }
+        delay(10);
     }
     else {
-        if(ReceivePacketTransp(&remote_Id, buffer, &buffer_size, 5000) != MESH_OK){
-            Serial.println("Recived frame");
+        if(ReceivePacketTransp(&remote_Id, buffer, &buffer_size, 5000) == MESH_OK){
+            Serial.print("FRAME: ");
+            for(int i = 0; i < buffer_size; i++){
+                Serial.print(buffer[i]);
+            }
+            Serial.print(" SIZE: ");
+            Serial.println(buffer_size);
             if(buffer[0] == 1){
                 digitalWrite(LED, !digitalRead(LED));
-                Serial.print("LED: ");
-                Serial.println(digitalRead(LED));
             }
         }
+        delay(10);
     }
 }
 
