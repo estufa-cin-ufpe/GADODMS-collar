@@ -1,6 +1,6 @@
 {
     "terminal.integrated.env.linux": {
-        "PATH": "/home/bois/.platformio/penv/bin:/home/bois/.platformio/penv:/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/lib/jvm/default/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl:/usr/lib/jvm/default/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl",
+        "PATH": "/home/bois/.platformio/penv/bin:/home/bois/.platformio/penv:/home/bois/esp/xtensa-esp32-elf/bin:/home/bois/bin:/home/bois/.local/bin:/home/bois/esp/xtensa-esp32-elf/bin:/home/bois/bin:/home/bois/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/home/diogo/android-studio/bin:/snap/bin:/usr/intelFPGA_lite/17.0/quartus/bin:/usr/intelFPGA_lite/17.0/quartus/bin",
         "PLATFORMIO_CALLER": "vscode"
     }
 }

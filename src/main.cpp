@@ -25,10 +25,11 @@ uint32_t local_UniqueId;
 
 // Remote LoRa INFO
 uint16_t remote_Id;
-uint8_t buffer[10] = {0};
-uint8_t buffer_size;
+uint8_t bufferPayload[MAX_PAYLOAD_SIZE] = {0};
+uint8_t buffer_size = 0;
 
 // payload
+uint16_t funciona = 2;
 uint8_t payload = 1;
 
 // Functions
@@ -53,7 +54,10 @@ void setup() {
         Serial.println(local_Net);
         Serial.print("Local Unique ID: ");
         Serial.println(local_UniqueId, HEX);
-        if(local_Id == 0) isMaster = true;
+        if(local_Id == 0) {
+            isMaster = true;
+            Serial.println("Set as a master");
+        }
     }
 }
 
@@ -61,29 +65,31 @@ void loop() {
     if(isMaster){
         if(posedge(PB, &prev_state)){
             Serial.println("PB detected...");
-            if(PrepareFrameTransp(254, &payload, sizeof(payload)) != MESH_OK){
+            if(PrepareFrameTransp(funciona, &payload, sizeof(payload)) != MESH_OK){
                 Serial.println("Error building msg frame");
             }
             else {
-                Serial.print("Sending frame");
+                Serial.print("Sending frame to ID: ");
+                Serial.println(funciona);
                 SendPacket();
             }
         }
-        delay(10);
+        delay(1);
     }
     else {
-        if(ReceivePacketTransp(&remote_Id, buffer, &buffer_size, 5000) == MESH_OK){
+        Serial.println("waiting for data...");
+        if(ReceivePacketTransp(&remote_Id, bufferPayload, &buffer_size, 5000) == MESH_OK){
             Serial.print("FRAME: ");
             for(int i = 0; i < buffer_size; i++){
-                Serial.print(buffer[i]);
+                Serial.print(bufferPayload[i]);
             }
             Serial.print(" SIZE: ");
             Serial.println(buffer_size);
-            if(buffer[0] == 1){
+            if(bufferPayload[0] == 1){
                 digitalWrite(LED, !digitalRead(LED));
             }
         }
-        delay(10);
+        delay(1);
     }
 }
 
