@@ -26,10 +26,11 @@ uint32_t local_UniqueId;
 // Remote LoRa INFO
 uint16_t remote_Id;
 uint8_t bufferPayload[MAX_PAYLOAD_SIZE] = {0};
+uint8_t deodato[3] = {0};
+uint8_t comando;
 uint8_t buffer_size = 0;
 
 // payload
-uint16_t funciona = 2;
 uint8_t payload = 1;
 
 // Functions
@@ -56,21 +57,36 @@ void setup() {
         Serial.println(local_UniqueId, HEX);
         if(local_Id == 0) {
             isMaster = true;
-            Serial.println("Set as a master");
+            Serial.println("Set as Master");
         }
     }
 }
 
 void loop() {
     if(isMaster){
+        if(PrepareFrameCommand(1, CMD_READRSSI, deodato, sizeof(deodato)) != MESH_OK){
+            Serial.println("Error building Command Frame");
+        }
+        SendPacket();
+        delay(100);
+        if(ReceivePacketCommand(&remote_Id, &comando, bufferPayload, &buffer_size, 1000) == MESH_OK){
+            Serial.println(remote_Id);
+            Serial.println(comando);
+            for(int i = 0; i < buffer_size; i++){
+                Serial.print(bufferPayload[i]);
+            }
+            Serial.println();
+        }
+        else {
+            Serial.println("error rssi");
+        }
         if(posedge(PB, &prev_state)){
             Serial.println("PB detected...");
-            if(PrepareFrameTransp(funciona, &payload, sizeof(payload)) != MESH_OK){
+            if(PrepareFrameTransp(1, &payload, sizeof(payload)) != MESH_OK){
                 Serial.println("Error building msg frame");
             }
             else {
-                Serial.print("Sending frame to ID: ");
-                Serial.println(funciona);
+                Serial.print("Sending frame to ID: 1");
                 SendPacket();
             }
         }
