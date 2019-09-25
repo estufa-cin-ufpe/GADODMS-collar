@@ -1,3 +1,0 @@
-[submodule "lib/LoRaMESH"]
-	path = lib/LoRaMESH
-	url = git://github.com/mfbsouza/LoRaMESH.git
