@@ -39,6 +39,8 @@ void Going_To_Sleep(){
   delay(1000); //wait a second to allow the led to be turned off before going to sleep
   sleep_cpu();//activating sleep mode
   Serial.println("just woke up!");//next line of code executed after the interrupt
+  ReceivePacketTransp(&remoteid, &dataReceive, &dataReceiveSize, timeout);
+  if(dataReceive==4) detachInterrupt(digitalPinToInterrupt(coleiraPin));
   while(dataReceive != 3){
     Serial.println("Waiting for Collar close");
     ReceivePacketTransp(&remoteid, &dataReceive, &dataReceiveSize, timeout);
