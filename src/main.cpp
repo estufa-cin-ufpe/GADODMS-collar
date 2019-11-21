@@ -17,6 +17,8 @@ uint8_t dataReceive;
 uint8_t dataReceiveSize;
 uint16_t timeout = 5000;
 
+bool flag;
+
 uint16_t id;
 uint16_t net;
 uint32_t uniqueId;
@@ -24,10 +26,14 @@ uint32_t uniqueId;
 uint8_t dataSend =1;
 
 void CollarViolation(){
-  Serial.println("Collar Violation Fired");//Print message to serial monitor
-  if(PrepareFrameTransp(nodeMasterCollar, &dataSend, sizeof(dataSend)) == MESH_OK){
-    SendPacket();
+  if(!flag){
+    Serial.println("Collar Violation Fired");//Print message to serial monitor
+    if(PrepareFrameTransp(nodeMasterCollar, &dataSend, sizeof(dataSend)) == MESH_OK){
+      SendPacket();
+    }
+    flag = true;
   }
+  
 }
 
 void Going_To_Sleep(){
@@ -40,7 +46,11 @@ void Going_To_Sleep(){
   sleep_cpu();//activating sleep mode
   Serial.println("just woke up!");//next line of code executed after the interrupt
   ReceivePacketTransp(&remoteid, &dataReceive, &dataReceiveSize, timeout);
-  if(dataReceive==4) detachInterrupt(digitalPinToInterrupt(coleiraPin));
+  if(dataReceive==3) {
+    Serial.println("AQUI");
+    detachInterrupt(digitalPinToInterrupt(coleiraPin));
+    dataReceive=4;
+  }
   while(dataReceive != 3){
     Serial.println("Waiting for Collar close");
     ReceivePacketTransp(&remoteid, &dataReceive, &dataReceiveSize, timeout);
@@ -66,6 +76,7 @@ void setup() {
 }
 
 void loop() {
+ flag =false; 
  delay(5000);//wait 5 seconds before going to sleep
  Going_To_Sleep();
 }
